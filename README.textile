@@ -1,0 +1,14 @@
+h1. DetailsTable
+
+Very easily create tables based on a model's attributes.
+
+
+h2. Example
+
+<pre>
+	details_table :object => @order, :except=>["id", "amount"]
+</pre>
+
+
+
+Copyright (c) 2009 Arthur Gunn, released under the MIT license
