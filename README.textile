@@ -6,7 +6,7 @@ Very easily create tables based on a model's attributes.
 h2. Example
 
 <pre>
-	details_table :object => @order, :except=>["id", "amount"]
+= details_table :object => @order, :except=>["id", "amount"]
 </pre>
 
 
