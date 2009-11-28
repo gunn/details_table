@@ -4,7 +4,7 @@ class DetailsTable
   def initialize base, opts={}
     options = { :class=>"details_table", :field_class=>"field",
                 :row_class => "row", :value_class=>"value",
-                :object=>nil }.merge(opts)
+                :no_data => "<span class='no_data'>[No Data]</span>", :object=>nil }.merge(opts)
                 
     self.base    = base
     self.object  = options[:object]
@@ -37,20 +37,24 @@ class DetailsTable
         haml_concat field.to_s.humanize
       end
       haml_tag(:td, :<, :class => detail_options[:value_class]) do
-        haml_concat (value || value_for_field(field))
+        haml_concat (value || value_for_field(field) || options[:no_data])
       end
     end
     nil
   end
   
   def value_for_field field
-    result = object.send( field )
+    # return if there's no object, or field is not defined on it
+    # in this case output will default to options[:no_data]
+    return if !(result = object && object.send( field ))
     case
     when result.is_a?(Time)
       "#{time_ago_in_words( result )} ago"
     # Do it this way so as to not break when Money gem is not present 
     when result.class.to_s == "Money"
       result.format
+    when result.blank?
+      nil
     else result
     end
   end
