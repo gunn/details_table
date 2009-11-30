@@ -14,14 +14,23 @@ class DetailsTable
   def create &blk
     haml_tag :table, :class => options[:class] do
       yield self if block_given?
-      if options[:except] || !block_given?
-        options[:except] ||= []
-        (object.class.column_names - options[:except]).each do |field|
-          detail field
-        end
+      
+      fields = case 
+      when options[:except] : object.class.column_names-options[:except]
+      when options[:only]   : options[:only]
+      when !block_given?    : object.class.column_names
       end
+      
+      details( fields ) if fields
+      
     end
     nil
+  end
+  
+  def details fields, *args
+    fields.each do |field|
+      detail field, *args
+    end
   end
   
   def detail field, *args
@@ -36,8 +45,15 @@ class DetailsTable
       haml_tag(:td, :<, :class => detail_options[:field_class]) do
         haml_concat field.to_s.humanize
       end
+      
+      if options[:form]
+        detail_options[:value_class] = "#{detail_options[:value_class]} has_text_field"
+        show_value = options[:form].text_field( field, :class => "text_field" )
+      else
+        show_value = (value || value_for_field(field) || options[:no_data])
+      end
       haml_tag(:td, :<, :class => detail_options[:value_class]) do
-        haml_concat (value || value_for_field(field) || options[:no_data])
+        haml_concat show_value
       end
     end
     nil
