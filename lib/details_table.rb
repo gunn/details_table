@@ -3,6 +3,7 @@ class DetailsTable
   
   def initialize base, opts={}
     options = { :class=>"details_table", :field_class=>"field",
+                :input_type => "text_field",
                 :row_class => "row", :value_class=>"value",
                 :no_data => "<span class='no_data'>[No Data]</span>", :object=>nil }.merge(opts)
                 
@@ -48,9 +49,9 @@ class DetailsTable
       
       if options[:form]
         detail_options[:value_class] = "#{detail_options[:value_class]} has_text_field"
-        show_value = options[:form].text_field( field, :class => "text_field" )
+        show_value = detail_options[:form].send(detail_options[:input_type], field )
       else
-        show_value = (value || value_for_field(field) || options[:no_data])
+        show_value = (value || value_for_field(field) || detail_options[:no_data])
       end
       haml_tag(:td, :<, :class => detail_options[:value_class]) do
         haml_concat show_value
