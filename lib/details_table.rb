@@ -47,7 +47,7 @@ class DetailsTable
         haml_concat field.to_s.humanize
       end
       
-      if options[:form]
+      if options[:form] && !value
         detail_options[:value_class] = "#{detail_options[:value_class]} has_text_field"
         show_value = detail_options[:form].send(detail_options[:input_type], field )
       else
