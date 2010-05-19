@@ -35,6 +35,7 @@ class DetailsTable
   end
   
   def detail field, *args
+    field = field.to_sym
     opts = args.pop if args.last && args.last.is_a?( Hash )
     opts ||= {}
     
