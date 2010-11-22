@@ -17,9 +17,9 @@ class DetailsTable
       yield self if block_given?
       
       fields = case 
-      when options[:except] : object.class.column_names-options[:except]
-      when options[:only]   : options[:only]
-      when !block_given?    : object.class.column_names
+      when options[:except] then object.class.column_names-options[:except]
+      when options[:only]   then options[:only]
+      when !block_given?    then object.class.column_names
       end
       
       details( fields ) if fields
